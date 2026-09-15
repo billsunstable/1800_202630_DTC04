@@ -68,6 +68,7 @@ elmo-hikes/
 ## Contributors
 - **Alex** - BCIT CST Student with a passion for technology and movies.
 
+- **Bill** - BCIT CST Student with a passion for going outside and fashion.
 
 ---
 
