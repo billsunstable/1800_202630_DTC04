@@ -66,11 +66,11 @@ elmo-hikes/
 
 
 ## Contributors
+--- **Nathan** - BCIT CST student who loves video games, anime, and manga.
 - **Alex** - BCIT CST Student with a passion for technology and movies.
 
 - **Bill** - BCIT CST Student with a passion for going outside and fashion.
 
----
 
 
 ## Acknowledgments
