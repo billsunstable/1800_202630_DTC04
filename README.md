@@ -66,10 +66,8 @@ elmo-hikes/
 
 
 ## Contributors
-- **Nathan Vazhappilly** - BCIT CST Student with a passion for video games, anime and manga.
+--- **Nathan** - BCIT CST student who loves video games, anime, and manga.
 
-
----
 
 
 ## Acknowledgments
