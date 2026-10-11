@@ -30,14 +30,35 @@
                 <p class="lead">Easily set up dates, reminders, and events all within one application that will change your life for the better. Start
                 here, start now, start a forever.</p>
                 <div class="d-grid gap-2 d-md-flex justify-content-md-start"> <button type="button"
-                        class="btn btn-primary btn-lg px-4 me-md-2">Login</button> <button type="button"
+                        class="btn btn-primary btn-lg px-4 me-md-2" data-bs-toggle="modal" data-bs-target="#loginModal">Login</button> <button type="button"
                         class="btn btn-outline-secondary btn-lg px-4">Sign up</button> </div>
             </div>
         </div>
     </div>
 
     <!-- Hero Sections ends -->
+    <!--Login Pop-Up Window starts here-->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loginModalLabel">Sign In</h5>
+                    <button type="type" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="loginEmail" class="form-label">Email address</label>
+                            <input type="email" class="form-control" id="loginEmail" placeholder="name@example.com">
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
+    <!--Login Pop-Up Window ends here-->
     <!------------------------------>
     <!-- Stuff for body goes here -->
 
