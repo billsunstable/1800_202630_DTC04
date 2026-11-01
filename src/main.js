@@ -2,6 +2,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap';
 import './loginSignup.js';
 import '../styles/style.css';
+import { collection, getDocs, addDoc, serverTimestamp } from "firebase/firestore";
 
 function sayHello() {
     console.log("Welcome to Time Management!");

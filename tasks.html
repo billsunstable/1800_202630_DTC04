@@ -47,119 +47,27 @@
         </div>
     </nav>
 
-    <div class="container-fluid bg-light text-dark p-5">
-        <div class="container bg-light p-5">
-            <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">Task Page </h1>
-        </div>
-
-        <div class="row gy-4">
-            <div class="col-sm">
-                <div class="card" style="width: 18rem;">
-                    <div class="card-body bg-dark text-white rounded border border-3 border-primary">
-                        <h5 class="card-title">Card title</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">Sample Task</h6>
-                        <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur, in!.
-                        </p>
-                        <a href="#" class="card-link">Edit Task</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm">
-                <div class="card" style="width: 18rem;">
-                    <div class="card-body bg-dark text-white rounded border border-3 border-primary">
-                        <h5 class="card-title">Card title</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">Sample Task</h6>
-                        <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur, in!.
-                        </p>
-                        <a href="#" class="card-link">Edit Task</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm">
-                <div class="card" style="width: 18rem;">
-                    <div class="card-body bg-dark text-white rounded border border-3 border-primary">
-                        <h5 class="card-title">Card title</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">Sample Task</h6>
-                        <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur, in!.
-                        </p>
-                        <a href="#" class="card-link">Edit Task</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row gy-4">
-            <div class="col-sm">
-                <div class="card" style="width: 18rem;">
-                    <div class="card-body bg-dark text-white rounded border border-3 border-primary">
-                        <h5 class="card-title">Card title</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">Sample Task</h6>
-                        <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur, in!.
-                        </p>
-                        <a href="#" class="card-link">Edit Task</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm">
-                <div class="card" style="width: 18rem;">
-                    <div class="card-body bg-dark text-white rounded border border-3 border-primary">
-                        <h5 class="card-title">Card title</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">Sample Task</h6>
-                        <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur, in!.
-                        </p>
-                        <a href="#" class="card-link">Edit Task</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm">
-                <div class="card" style="width: 18rem;">
-                    <div class="card-body bg-dark text-white rounded border border-3 border-primary">
-                        <h5 class="card-title">Card title</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">Sample Task</h6>
-                        <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur, in!.
-                        </p>
-                        <a href="#" class="card-link">Edit Task</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row gy-20">
-            <div class="col-sm">
-                <div class="card" style="width: 18rem;">
-                    <div class="card-body bg-dark text-white rounded border border-3 border-primary">
-                        <h5 class="card-title">Card title</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">Sample Task</h6>
-                        <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur, in!.
-                        </p>
-                        <a href="#" class="card-link">Edit Task</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm">
-                <div class="card" style="width: 18rem;">
-                    <div class="card-body bg-dark text-white rounded border border-3 border-primary">
-                        <h5 class="card-title">Card title</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">Sample Task</h6>
-                        <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur, in!.
-                        </p>
-                        <a href="#" class="card-link">Edit Task</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm">
-                <div class="card" style="width: 18rem;">
-                    <div class="card-body bg-dark text-white rounded border border-3 border-primary">
-                        <h5 class="card-title">Card title</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">Sample Task</h6>
-                        <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Consectetur, in!.
-                        </p>
-                        <a href="#" class="card-link">Edit Task</a>
-                    </div>
-                </div>
-            </div>
+    <div class="container-fluid bg-body text-dark p-5">
+        <h1>Your Tasks</h1>
+        <div id="tasks-go-here" class="row">
         </div>
     </div>
 
-    <script type="module" src="/src/main.js"></script>
+    <template id="taskCardTemplate">
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"></h5>
+                    <p class="card-text"></p>
+                    <p>Day: <span class="card-day"></span></p>
+                    <p>Time: <span class="card-time"></span></p>
+                    <a class="btn btn-primary read-more" href="#">Edit</a>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <script type="module" src="/src/tasks.js"></script>
 </body>
 
 </html>
