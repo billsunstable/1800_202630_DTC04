@@ -4,77 +4,222 @@ import 'bootstrap';
 import './loginSignup.js';
 import '../styles/style.css';
 
-import { collection, getDocs, addDoc, serverTimestamp, query } from "firebase/firestore";
-import { db } from './firebaseConfig.js';
+import { db, auth } from './firebaseConfig.js';
 
-// Helper function to add the sample task documents.
-async function addCalendarData() {
-    const taskRef = collection(db, "days");
+import { onAuthStateChanged } from 'firebase/auth';
 
-    console.log("Adding sample task data...");
+import {
+    collection,
+    getDocs,
+    query
+} from "firebase/firestore";
 
-    await addDoc(taskRef, {
-        name: "Monday",
-        date: "Nov 2",
-        last_updated: serverTimestamp()
+
+// Generate the seven days of the week.
+const weekdays = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday"
+];
+
+
+// Generate calendar cards.
+function generateCalendar() {
+
+    const container = document.getElementById("calendar-go-here");
+    const template = document.getElementById("calendarCardTemplate");
+
+    container.innerHTML = "";
+
+    weekdays.forEach(day => {
+
+        const newCard = template.content.cloneNode(true);
+
+        newCard.querySelector(".calendar-title").textContent = day;
+
+        newCard.querySelector(".calendar-day").textContent = "";
+
+        container.appendChild(newCard);
+
     });
 
-    await addDoc(taskRef, {
-        name: "Tuesday",
-        date: "Nov 3",
-        last_updated: serverTimestamp()
-    });
-
-    await addDoc(taskRef, {
-        name: "Wednesday",
-        date: "Nov 4",
-        last_updated: serverTimestamp()
-    });
-    
 }
 
-// Seeds the "days" collection with initial data if it is empty
-async function seedTasks() {
-    const taskRef = collection(db, "days");
-    const querySnapshot = await getDocs(taskRef);
 
-    if (querySnapshot.empty) {
-        console.log("Collection is empty. Adding sample data...");
-        await addCalendarData();
-    } else {
-        console.log("Calendar data already exists.");
-    }
-}
-
-async function displayCalendarDynamically() {
-    let cardTemplate = document.getElementById("calendarCardTemplate");
-    const tasksCollectionRef = collection(db, "days");
+// Retrieve tasks belonging to the logged-in user.
+async function displayCalendarDynamically(userID) {
 
     try {
-        // Get all calendar documents
-        const q = query(tasksCollectionRef);
+
+        const tasksRef = collection(db, "users", userID, "tasks");
+
+        const q = query(tasksRef);
+
         const querySnapshot = await getDocs(q);
 
-        let container = document.getElementById("calendar-go-here");
-        container.innerHTML = "";
+        // Create the seven calendar days.
+        generateCalendar();
+
+        const dayContainers = document.querySelectorAll(".day-tasks");
+
+        // Store tasks in an array.
+        const tasks = [];
 
         querySnapshot.forEach(taskDoc => {
-            let newcard = cardTemplate.content.cloneNode(true);
-            const task = taskDoc.data();
 
-            newcard.querySelector('.calendar-title').textContent = task.name;
-            newcard.querySelector('.calendar-day').textContent = task.date;
-            newcard.querySelector(".read-more").href = `eachCalendar.html?docID=${taskDoc.id}`;
+            tasks.push({
+                id: taskDoc.id,
+                ...taskDoc.data()
+            });
 
-            container.appendChild(newcard);
+        });
+
+        // Sort tasks by their start time.
+        tasks.sort((a, b) => {
+
+            return (a.task_time || "23:59").localeCompare(
+                b.task_time || "23:59"
+            );
+
+        });
+
+        // Match each task to its weekday.
+        tasks.forEach(task => {
+
+            const taskDay = task.day;
+
+            const dayIndex = weekdays.indexOf(taskDay);
+
+            // Ignore tasks without a matching weekday.
+            if (dayIndex === -1) {
+                console.warn("Invalid task day:", taskDay);
+                return;
+            }
+
+            // Create the task card.
+            const taskCard = document.createElement("div");
+
+            taskCard.className = "card mb-2 p-2";
+
+            taskCard.style.cursor = "pointer";
+
+            // Task name.
+            const taskName = document.createElement("h6");
+
+            taskName.textContent = task.name || "Untitled Task";
+
+            // Task time.
+            const taskTime = document.createElement("small");
+
+            taskTime.textContent = task.task_time || "No time specified";
+
+            taskCard.appendChild(taskName);
+
+            taskCard.appendChild(taskTime);
+
+            // Add task under the matching weekday.
+            dayContainers[dayIndex].appendChild(taskCard);
+
         });
 
     } catch (error) {
-        console.error("Error getting documents: ", error);
+
+        console.error("Error displaying calendar:", error);
+
     }
+
 }
 
-// Call seed first, then display cards once seeding completes
-seedTasks().then(() => {
-    displayCalendarDynamically();
+
+// Retrieve subtasks for the selected task.
+async function displaySubtasks(userID, taskID, taskName) {
+
+    try {
+
+        const taskNameElement = document.getElementById("selected-task-name");
+
+        const subtasksContainer = document.getElementById("subtasks-go-here");
+
+        taskNameElement.textContent = `Subtasks for: ${taskName}`;
+
+        subtasksContainer.innerHTML = "Loading subtasks...";
+
+        // Get the selected task's subtasks collection.
+        const subtasksRef = collection(
+            db,
+            "users",
+            userID,
+            "tasks",
+            taskID,
+            "subtasks"
+        );
+
+        const querySnapshot = await getDocs(subtasksRef);
+
+        subtasksContainer.innerHTML = "";
+
+        if (querySnapshot.empty) {
+
+            subtasksContainer.innerHTML = "<p>No subtasks yet.</p>";
+
+            return;
+
+        }
+
+        querySnapshot.forEach(subtaskDoc => {
+
+            const subtask = subtaskDoc.data();
+
+            const subtaskElement = document.createElement("div");
+
+            subtaskElement.className = "form-check mb-2";
+
+            const checkbox = document.createElement("input");
+
+            checkbox.type = "checkbox";
+
+            checkbox.className = "form-check-input";
+
+            checkbox.checked = subtask.completed || false;
+
+            const label = document.createElement("label");
+
+            label.className = "form-check-label";
+
+            label.textContent = subtask.name || "Untitled subtask";
+
+            subtaskElement.appendChild(checkbox);
+
+            subtaskElement.appendChild(label);
+
+            subtasksContainer.appendChild(subtaskElement);
+
+        });
+
+    } catch (error) {
+
+        console.error("Error retrieving subtasks:", error);
+
+    }
+
+}
+
+
+// Wait for Firebase authentication.
+onAuthStateChanged(auth, async (user) => {
+
+    if (user) {
+
+        await displayCalendarDynamically(user.uid);
+
+    } else {
+
+        console.log("User is not logged in.");
+
+    }
+
 });
