@@ -32,6 +32,40 @@ function displayCurrentDate() {
     }
 }
 
+// Display the current week
+function displayCurrentWeek() {
+
+    const dateElement = document.getElementById('current-week');
+
+    if (dateElement) {
+
+        const today = new Date();
+
+        // Get the first day of the week (Monday)
+        const startOfWeek = new Date(today);
+        const day = today.getDay();
+
+        const difference = day === 0 ? -6 : 1 - day;
+
+        startOfWeek.setDate(today.getDate() + difference);
+
+        // Get the last day of the week (Sunday)
+        const endOfWeek = new Date(startOfWeek);
+        endOfWeek.setDate(startOfWeek.getDate() + 6);
+
+        // Format dates
+        const options = {
+            month: 'long',
+            day: 'numeric'
+        };
+
+        const startDate = startOfWeek.toLocaleDateString('en-CA', options);
+        const endDate = endOfWeek.toLocaleDateString('en-CA', options);
+
+        dateElement.textContent =
+            `${startDate} – ${endDate}, ${endOfWeek.getFullYear()}`;
+    }
+}
 
 // Display the user's three tasks
 async function displayUserTasks(userId) {
@@ -76,7 +110,7 @@ async function displayUserTasks(userId) {
             taskDetails.textContent = task.details || 'No additional details';
 
             const taskDay = document.createElement('p');
-            taskDay.textContent = `Date: ${task.task_day || 'Not specified'}`;
+            taskDay.textContent = `Day: ${task.day || 'Not specified'}`;
 
             const taskTime = document.createElement('p');
             taskTime.textContent = `Time: ${task.task_time || 'Not specified'}`;
@@ -98,13 +132,17 @@ async function displayUserTasks(userId) {
     }
 }
 
+// Display current date
+displayCurrentDate();
+
+// Display current date
+displayCurrentWeek();
 
 // Check authentication and personalize dashboard
 onAuthStateChanged(auth, async (user) => {
 
     if (user) {
 
-        
         const displayName = user.displayName || user.email || 'Friend';
 
         const nameElement = document.getElementById('name-goes-here');
@@ -113,16 +151,18 @@ onAuthStateChanged(auth, async (user) => {
             nameElement.textContent = displayName;
         }
 
-        
-        displayCurrentDate();
-
-        
         await displayUserTasks(user.uid);
 
     } else {
 
-        
-        window.location.href = 'index.html';
+        // Only redirect if the user is not already on index.html
+        const currentPage = window.location.pathname;
+
+        if (!currentPage.endsWith('/index.html') &&
+            currentPage !== '/') {
+
+            window.location.replace('index.html');
+        }
 
     }
 
