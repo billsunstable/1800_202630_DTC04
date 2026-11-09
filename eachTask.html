@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Time Management</title>
+    <title>Edit Task</title>
 </head>
 
 <body>
@@ -12,12 +12,36 @@
     <site-navbar></site-navbar>
     <!--Navigation Bar ends here-->
 
-
     <main class="container py-4">
-        <h1 class="taskName">Loading...</h1>
-        <p class="taskInfo">Loading...</p>
-        <p>Day: <span class="taskDay">Loading...</span></p>
-        <p>Time: <span class="taskTime">Loading...</span></p>
+        <h1>Task Details & Editing</h1>
+
+        <form id="editTaskForm" class="mt-4">
+            <div class="mb-3">
+                <label for="taskNameInput" class="form-label">Task Name</label>
+                <input type="text" class="form-control" id="taskNameInput" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="detailsInput" class="form-label">Details</label>
+                <textarea class="form-control" id="detailsInput" rows="3" required></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label for="dateInput" class="form-label">Task Day</label>
+                <!-- Change type="text" to type="date" -->
+                <input type="date" class="form-control" id="dateInput" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="timeInput" class="form-label">Task Time</label>
+                <input type="time" class="form-control" id="timeInput">
+            </div>
+
+            <!-- Action Buttons -->
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+            <button type="button" id="deleteBtn" class="btn btn-danger">Delete Task</button>
+            <a href="tasks.html" class="btn btn-secondary">Back to Tasks</a>
+        </form>
     </main>
 
     <script type="module" src="src/main.js"></script>

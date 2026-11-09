@@ -86,7 +86,7 @@ async function displayUserTasks(userId) {
 
         const querySnapshot = await getDocs(q);
 
-        
+
         taskList.innerHTML = '';
 
         if (querySnapshot.empty) {
@@ -94,7 +94,7 @@ async function displayUserTasks(userId) {
             return;
         }
 
-        
+
         querySnapshot.forEach((docSnap) => {
 
             const task = docSnap.data();
@@ -153,17 +153,6 @@ onAuthStateChanged(auth, async (user) => {
 
         await displayUserTasks(user.uid);
 
-    } else {
 
-        // Only redirect if the user is not already on index.html
-        const currentPage = window.location.pathname;
-
-        if (!currentPage.endsWith('/index.html') &&
-            currentPage !== '/') {
-
-            window.location.replace('index.html');
-        }
-
-    }
-
-});
+    };
+})
