@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Your Tasks</title>
 </head>
 
 <body>
@@ -13,20 +13,22 @@
     <!--Navigation Bar ends here-->
 
     <div class="container-fluid bg-body text-dark p-5">
+        <a class="btn btn-success mb-3" href="addTask.html">➕ Add a hike</a>
         <h1>Your Tasks</h1>
-        <div id="tasks-go-here" class="row">
-        </div>
+        <!-- The container where cards are injected -->
+        <div id="tasks-go-here" class="row row-cols-1 row-cols-md-3 g-4"></div>
+    </div>
     </div>
 
     <template id="taskCardTemplate">
-        <div class="col">
-            <div class="card">
+        <div class="col"> <!-- 🔑 Make sure this wrapper has class="col" -->
+            <div class="card h-100 shadow-sm">
                 <div class="card-body">
-                    <h5 class="card-title"></h5>
-                    <p class="card-text"></p>
-                    <p>Day: <span class="card-day"></span></p>
-                    <p>Time: <span class="card-time"></span></p>
-                    <a class="btn btn-primary read-more" href="#">Edit</a>
+                    <h5 class="card-title">Card title</h5>
+                    <p class="card-text">Some quick example text...</p>
+                    <p class="card-day text-muted">00/00/00</p>
+                    <p class="card-time text-muted">00:00</p>
+                    <a href="#a" class="btn btn-primary">Edit</a>
                 </div>
             </div>
         </div>
@@ -34,6 +36,7 @@
 
     <script type="module" src="/src/tasks.js"></script>
     <script type="module" src="/src/components/site-navbar.js"></script>
+    <script type="module" src="./src/main.js"></script>
 </body>
 
 </html>
