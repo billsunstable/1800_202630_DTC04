@@ -70,9 +70,12 @@ function initAuthUI() {
         setSubmitDisabled(loginForm, true);
 
         try {
-            await loginUser(email, password);
+            const userCredential = await loginUser(email, password);
 
-            location.href = redirectUrl;
+            console.log('Login successful:', userCredential.user.uid);
+            console.log('Current auth user:', userCredential.user);
+
+            window.location.assign('./main.html');
 
         } catch (err) {
             showError(loginForm, authErrorMessage(err));
@@ -129,4 +132,8 @@ function initAuthUI() {
 
 
 // --- Initialize UI on DOMContentLoaded ---
-document.addEventListener('DOMContentLoaded', initAuthUI);
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initAuthUI);
+} else {
+    initAuthUI();
+}

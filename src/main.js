@@ -1,6 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap';
-import './loginSignup.js';
 import '../styles/style.css';
 
 import { auth, db } from './firebaseConfig.js';
@@ -139,20 +138,29 @@ displayCurrentDate();
 displayCurrentWeek();
 
 // Check authentication and personalize dashboard
-onAuthStateChanged(auth, async (user) => {
+auth.authStateReady().then(async () => {
 
-    if (user) {
+    const user = auth.currentUser;
 
-        const displayName = user.displayName || user.email || 'Friend';
+    console.log('Main page loaded');
+    console.log('Current Firebase user:', user);
 
-        const nameElement = document.getElementById('name-goes-here');
+    if (!user) {
+        console.log('No authenticated user. Redirecting...');
+        window.location.replace('./index.html');
+        return;
+    }
 
-        if (nameElement) {
-            nameElement.textContent = displayName;
-        }
+    console.log('User authenticated:', user.email);
 
-        await displayUserTasks(user.uid);
+    const displayName = user.displayName || user.email || 'Friend';
 
+    const nameElement = document.getElementById('name-goes-here');
 
-    };
-})
+    if (nameElement) {
+        nameElement.textContent = displayName;
+    }
+
+    await displayUserTasks(user.uid);
+
+});
