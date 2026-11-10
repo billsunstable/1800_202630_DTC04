@@ -145,11 +145,11 @@ auth.authStateReady().then(async () => {
     console.log('Main page loaded');
     console.log('Current Firebase user:', user);
 
-    if (!user) {
-        console.log('No authenticated user. Redirecting...');
-        window.location.replace('./index.html');
-        return;
-    }
+    // if (!user) {
+    //     console.log('No authenticated user. Redirecting...');
+    //     window.location.replace('./index.html');
+    //     return;
+    // }
 
     console.log('User authenticated:', user.email);
 
