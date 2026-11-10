@@ -2,7 +2,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap';
 import './loginSignup.js';
 import '../styles/style.css';
-import "bootstrap-icons/font/bootstrap-icons.css";
 import { collection, getDocs, addDoc, serverTimestamp, query, orderBy } from "firebase/firestore";
 import { db } from './firebaseConfig.js';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
