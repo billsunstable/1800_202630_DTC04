@@ -1,8 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap';
 import './loginSignup.js';
-import '../styles/style.css';
-import "bootstrap-icons/font/bootstrap-icons.css";
+import '../styles/style.css'; z
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { db } from './firebaseConfig.js';
 import { getAuth, onAuthStateChanged } from "firebase/auth";

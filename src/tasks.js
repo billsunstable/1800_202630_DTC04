@@ -5,6 +5,7 @@ import '../styles/style.css';
 import { collection, getDocs, addDoc, serverTimestamp, query, orderBy } from "firebase/firestore";
 import { db } from './firebaseConfig.js';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import "bootstrap-icons/font/bootstrap-icons.css";
 
 const auth = getAuth();
 
