@@ -12,7 +12,7 @@ class SiteNavbar extends HTMLElement {
     renderNavbar() {
         this.innerHTML = `
             <!-- Navbar: single source of truth -->
-    <nav class="navbar navbar-expand-lg bg-body-teritary">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
             <a class="navbar-brand" href="main.html">
                 <h4><b>Time Management</b></h4>
@@ -35,6 +35,13 @@ class SiteNavbar extends HTMLElement {
                         <a class="nav-link" href="calendar.html">Calendar</a>
                     </li>
                 </ul>
+                <div id="authControls">
+                    <div class="btn btn-outline-dark"
+                        style="visibility: hidden; min-width: 80px;">
+                        Log out
+                    </div>
+                
+                </div>
             </div>
         </div>
     </nav>
@@ -50,13 +57,13 @@ class SiteNavbar extends HTMLElement {
         const authControls = this.querySelector('#authControls'); // Find #authControls inside this navbar
 
         // Invisible placeholder prevents layout shifting while Firebase checks login status
-        authControls.innerHTML = `<div class="btn btn-outline-light" style="visibility: hidden; min-width: 80px;">Log out</div>`;
+        authControls.innerHTML = `<div class="btn btn-outline-dark" style="visibility: hidden; min-width: 80px;">Log out</div>`;
 
         // Pass a callback that runs when Firebase reports the login status
         onAuthReady(function (user) { // Receives the user object (or null)
 
             if (user) { // User is logged in
-                authControls.innerHTML = `<button class="btn btn-outline-light" id="signOutBtn" type="button" style="min-width: 80px;">Log out</button>`;
+                authControls.innerHTML = `<button class="btn btn-outline-dark" id="signOutBtn" type="button" style="min-width: 80px;">Log out</button>`;
 
                 const signOutBtn = authControls.querySelector('#signOutBtn');
                 signOutBtn.addEventListener('click', logoutUser); // Callback: runs when Log out is clicked
