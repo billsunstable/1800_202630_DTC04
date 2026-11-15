@@ -1,3 +1,4 @@
+
 import { db, auth } from "./firebaseConfig.js";
 import { doc, getDoc } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
@@ -30,7 +31,7 @@ async function displayCalendar(user) {
         const task = taskSnap.data();
 
         const name = task.name;
-        const day = task.date;
+        const day = task.task_day;
 
         // Display the task information.
         document.querySelector('.calendarName').textContent = name;

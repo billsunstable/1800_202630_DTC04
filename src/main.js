@@ -32,6 +32,7 @@ function displayCurrentDate() {
 }
 
 // Display the current week
+
 function displayCurrentWeek() {
 
     const dateElement = document.getElementById('current-week');
@@ -40,31 +41,35 @@ function displayCurrentWeek() {
 
         const today = new Date();
 
-        // Get the first day of the week (Monday)
+        // Get the first day of the week (Sunday).
         const startOfWeek = new Date(today);
+
         const day = today.getDay();
 
-        const difference = day === 0 ? -6 : 1 - day;
+        const difference = -day;
 
         startOfWeek.setDate(today.getDate() + difference);
 
-        // Get the last day of the week (Sunday)
+        // Get the last day of the week (Saturday).
         const endOfWeek = new Date(startOfWeek);
+
         endOfWeek.setDate(startOfWeek.getDate() + 6);
 
-        // Format dates
+        // Format dates.
         const options = {
             month: 'long',
             day: 'numeric'
         };
 
         const startDate = startOfWeek.toLocaleDateString('en-CA', options);
+
         const endDate = endOfWeek.toLocaleDateString('en-CA', options);
 
         dateElement.textContent =
             `${startDate} – ${endDate}, ${endOfWeek.getFullYear()}`;
     }
 }
+
 
 // Display the user's three tasks
 async function displayUserTasks(userId) {

@@ -17,13 +17,13 @@ import {
 
 // Generate the seven days of the week.
 const weekdays = [
+    "Sunday",
     "Monday",
     "Tuesday",
     "Wednesday",
     "Thursday",
     "Friday",
-    "Saturday",
-    "Sunday"
+    "Saturday"
 ];
 
 
@@ -31,6 +31,7 @@ const weekdays = [
 function generateCalendar() {
 
     const container = document.getElementById("calendar-go-here");
+
     const template = document.getElementById("calendarCardTemplate");
 
     container.innerHTML = "";
@@ -48,6 +49,73 @@ function generateCalendar() {
     });
 
 }
+
+
+// Convert a YYYY/MM/DD date into its actual weekday.
+
+function getWeekdayFromDate(taskDay) {
+
+    if (!taskDay) {
+        console.warn("Task has no task_day value.");
+        return null;
+    }
+
+    let date;
+
+    // If the value is a Firestore Timestamp.
+    if (typeof taskDay.toDate === "function") {
+
+        date = taskDay.toDate();
+
+    }
+
+    // If the value is already a JavaScript Date.
+    else if (taskDay instanceof Date) {
+
+        date = taskDay;
+
+    }
+
+    // If the value is a string.
+    else if (typeof taskDay === "string") {
+
+        const parts = taskDay.split(/[-/]/).map(Number);
+
+        if (parts.length !== 3) {
+            console.warn("Invalid task_day format:", taskDay);
+            return null;
+        }
+
+        const [year, month, day] = parts;
+
+        date = new Date(year, month - 1, day);
+
+        if (
+            date.getFullYear() !== year ||
+            date.getMonth() !== month - 1 ||
+            date.getDate() !== day
+        ) {
+            console.warn("Invalid task_day date:", taskDay);
+            return null;
+        }
+
+    }
+
+    else {
+
+        console.warn("Unsupported task_day type:", taskDay);
+        return null;
+
+    }
+
+    // Convert JavaScript weekday into Monday-Sunday order.
+    const weekdayIndex = date.getDay();
+
+    return weekdays[weekdayIndex];
+
+}
+
+
 
 
 // Retrieve tasks belonging to the logged-in user.
@@ -87,17 +155,20 @@ async function displayCalendarDynamically(userID) {
 
         });
 
-        // Match each task to its weekday.
+        // Match each task to its actual weekday using task_day.
         tasks.forEach(task => {
 
-            const taskDay = task.day;
+            const taskDay = getWeekdayFromDate(task.task_day);
 
             const dayIndex = weekdays.indexOf(taskDay);
 
-            // Ignore tasks without a matching weekday.
+            // Ignore tasks with invalid dates.
             if (dayIndex === -1) {
-                console.warn("Invalid task day:", taskDay);
+
+                console.warn("Invalid task date:", task.task_day);
+
                 return;
+
             }
 
             // Create the task card.
@@ -129,80 +200,6 @@ async function displayCalendarDynamically(userID) {
     } catch (error) {
 
         console.error("Error displaying calendar:", error);
-
-    }
-
-}
-
-
-// Retrieve subtasks for the selected task.
-async function displaySubtasks(userID, taskID, taskName) {
-
-    try {
-
-        const taskNameElement = document.getElementById("selected-task-name");
-
-        const subtasksContainer = document.getElementById("subtasks-go-here");
-
-        taskNameElement.textContent = `Subtasks for: ${taskName}`;
-
-        subtasksContainer.innerHTML = "Loading subtasks...";
-
-        // Get the selected task's subtasks collection.
-        const subtasksRef = collection(
-            db,
-            "users",
-            userID,
-            "tasks",
-            taskID,
-            "subtasks"
-        );
-
-        const querySnapshot = await getDocs(subtasksRef);
-
-        subtasksContainer.innerHTML = "";
-
-        if (querySnapshot.empty) {
-
-            subtasksContainer.innerHTML = "<p>No subtasks yet.</p>";
-
-            return;
-
-        }
-
-        querySnapshot.forEach(subtaskDoc => {
-
-            const subtask = subtaskDoc.data();
-
-            const subtaskElement = document.createElement("div");
-
-            subtaskElement.className = "form-check mb-2";
-
-            const checkbox = document.createElement("input");
-
-            checkbox.type = "checkbox";
-
-            checkbox.className = "form-check-input";
-
-            checkbox.checked = subtask.completed || false;
-
-            const label = document.createElement("label");
-
-            label.className = "form-check-label";
-
-            label.textContent = subtask.name || "Untitled subtask";
-
-            subtaskElement.appendChild(checkbox);
-
-            subtaskElement.appendChild(label);
-
-            subtasksContainer.appendChild(subtaskElement);
-
-        });
-
-    } catch (error) {
-
-        console.error("Error retrieving subtasks:", error);
 
     }
 
