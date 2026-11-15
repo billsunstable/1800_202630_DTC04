@@ -145,8 +145,6 @@ auth.authStateReady().then(async () => {
     console.log('Main page loaded');
     console.log('Current Firebase user:', user);
 
-
-
     console.log('User authenticated:', user.email);
 
     const displayName = user.displayName || user.email || 'Friend';
