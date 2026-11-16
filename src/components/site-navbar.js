@@ -12,19 +12,21 @@ class SiteNavbar extends HTMLElement {
     renderNavbar() {
         this.innerHTML = `
             <!-- Navbar: single source of truth -->
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="main.html">
-                <h4><b>Time Management</b></h4>
+    <nav class="navbar navbar-expand-lg bg-white border-bottom shadow-sm py-3">
+        <div class="container">
+            <!-- Brand (Using utility classes instead of <h4> fixes vertical alignment) -->
+            <a class="navbar-brand fw-bold fs-4 text-primary" href="main.html">
+                Time Management
             </a>
 
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
                 aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <!-- Added gap-lg-3 for cleaner link spacing -->
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4 gap-lg-3 fw-medium">
                     <li class="nav-item">
                         <a class="nav-link" href="main.html">Home</a>
                     </li>
@@ -35,12 +37,13 @@ class SiteNavbar extends HTMLElement {
                         <a class="nav-link" href="calendar.html">Calendar</a>
                     </li>
                 </ul>
-                <div id="authControls">
-                    <div class="btn btn-outline-dark"
+
+                <!-- Kept your exact ID and placeholder structure intact -->
+                <div id="authControls" class="d-flex align-items-center">
+                    <div class="btn btn-outline-danger btn-sm px-3"
                         style="visibility: hidden; min-width: 80px;">
                         Log out
                     </div>
-                
                 </div>
             </div>
         </div>
