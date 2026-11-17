@@ -14,6 +14,14 @@ import {
     query
 } from "firebase/firestore";
 
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        init(user.uid);
+    } else {
+        location.href = "index.html";
+    }
+});
+
 
 // Generate the seven days of the week.
 const weekdays = [
