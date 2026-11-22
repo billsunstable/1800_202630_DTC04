@@ -49,43 +49,46 @@ async function displayTaskInfo() {
 
 // 2. Handle saving updates when the form is submitted
 async function updateTask(event) {
-    event.preventDefault();
+    if (confirm("Are you sure you want to update this task? All previous information will be removed.")) {
+        event.preventDefault();
 
-    const updatedData = {
-        name: document.getElementById("taskNameInput").value,
-        details: document.getElementById("detailsInput").value,
-        task_day: document.getElementById("dateInput").value,
-        task_time: document.getElementById("timeInput").value,
-        last_updated: serverTimestamp()
-    };
+        const updatedData = {
+            name: document.getElementById("taskNameInput").value,
+            details: document.getElementById("detailsInput").value,
+            task_day: document.getElementById("dateInput").value,
+            task_time: document.getElementById("timeInput").value,
+            last_updated: serverTimestamp()
+        };
 
-    try {
-        // 🔑 Point to the user's subcollection path for updating
-        const taskRef = doc(db, "users", activeUserId, "tasks", taskId);
-        await updateDoc(taskRef, updatedData);
-        alert("Task updated successfully!");
-        location.href = "tasks.html";
-    } catch (error) {
-        console.error("Error updating task:", error);
-        alert("Failed to update task.");
-    }
-}
-
-// 3. Delete Task Function
-async function deleteTask() {
-    if (confirm("Are you sure you want to delete this task?")) {
         try {
-            // 🔑 Point to the user's subcollection path for deletion
+            // 🔑 Point to the user's subcollection path for updating
             const taskRef = doc(db, "users", activeUserId, "tasks", taskId);
-            await deleteDoc(taskRef);
+            await updateDoc(taskRef, updatedData);
+            alert("Task updated successfully!");
             location.href = "tasks.html";
         } catch (error) {
-            console.error("Error deleting task:", error);
-            alert("Failed to delete task.");
+            console.error("Error updating task:", error);
+            alert("Failed to update task.");
         }
     }
-}
 
+    // 3. Delete Task Function
+ 
+}
+   async function deleteTask() {
+        if (confirm("Are you sure you want to delete this task?")) {
+            try {
+                // 🔑 Point to the user's subcollection path for deletion
+                const taskRef = doc(db, "users", activeUserId, "tasks", taskId);
+                await deleteDoc(taskRef);
+                alert("Task successfully deleted.");
+                location.href = "tasks.html";
+            } catch (error) {
+                console.error("Error deleting task:", error);
+                alert("Failed to delete task.");
+            }
+        }
+    }
 // Attach event listeners
 const editForm = document.getElementById("editTaskForm");
 if (editForm) {

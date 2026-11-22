@@ -36,6 +36,7 @@ async function saveTask(event) {
     try {
         const userTasksRef = collection(db, "users", currentUser.uid, "tasks");
         await addDoc(userTasksRef, newTask);
+        alert("Task created successfully!");
         location.href = "tasks.html";
     } catch (error) {
         console.error("Error saving task:", error);

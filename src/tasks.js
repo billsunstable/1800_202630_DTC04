@@ -2,7 +2,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap';
 import './loginSignup.js';
 import '../styles/style.css';
-import { collection, getDocs, addDoc, serverTimestamp, query, orderBy } from "firebase/firestore";
+import { collection, getDocs, doc, updateDoc, serverTimestamp, query, orderBy } from "firebase/firestore";
 import { db } from './firebaseConfig.js';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
@@ -16,33 +16,6 @@ onAuthStateChanged(auth, (user) => {
         location.href = "index.html";
     }
 });
-
-async function addTaskData(userId) {
-    const userTasksRef = collection(db, "users", userId, "tasks");
-    await addDoc(userTasksRef, {
-        name: "Task #1",
-        details: "Sample task details...",
-        task_day: "2026-11-09",
-        task_time: "12:00",
-        last_updated: serverTimestamp()
-    });
-    await addDoc(userTasksRef, {
-        name: "Task #2",
-        details: "Sample task details...",
-        task_day: "2026-11-09",
-        task_time: "12:00",
-        last_updated: serverTimestamp()
-    });
-}
-
-async function seedTasks(userId) {
-    const userTasksRef = collection(db, "users", userId, "tasks");
-    const querySnapshot = await getDocs(userTasksRef);
-
-    if (querySnapshot.empty) {
-        await addTaskData(userId);
-    }
-}
 
 async function displayCardsDynamically(userId) {
     let cardTemplate = document.getElementById("taskCardTemplate");
@@ -68,21 +41,51 @@ async function displayCardsDynamically(userId) {
             newcard.querySelector('.card-title').textContent = task.name;
             newcard.querySelector('.card-text').textContent = task.details;
             newcard.querySelector('.card-day').textContent = task.task_day || "00/00/00";
-            newcard.querySelector('.card-time').textContent = task.task_time || "00:00";
+
+            // 🔑 12-hour time conversion
+            let formattedTime = "00:00";
+            if (task.task_time) {
+                let [hours, minutes] = task.task_time.split(':');
+                let h = parseInt(hours, 10);
+                let ampm = h >= 12 ? 'PM' : 'AM';
+                h = h % 12 || 12;
+                formattedTime = `${h}:${minutes} ${ampm}`;
+            }
+            newcard.querySelector('.card-time').textContent = formattedTime;
 
             let editBtn = newcard.querySelector('a');
             if (editBtn) {
                 editBtn.href = `eachTask.html?docID=${taskDoc.id}`;
             }
 
+            // Handle checkbox status and Firebase update (INSIDE the loop)
+            const checkbox = newcard.querySelector('.task-checkbox');
+            const statusBadge = newcard.querySelector('.task-status');
+
+            checkbox.checked = task.completed || false;
+            statusBadge.textContent = task.completed ? "Complete" : "Incomplete";
+            statusBadge.className = task.completed ? "badge bg-success text-white task-status" : "badge bg-danger text-white task-status";
+
+            checkbox.addEventListener('change', async () => {
+                const checkedState = checkbox.checked;
+                statusBadge.textContent = checkedState ? "Complete" : "Incomplete";
+                statusBadge.className = checkedState ? "badge bg-success text-white task-status" : "badge bg-danger text-white task-status";
+
+                const taskRef = doc(db, "users", userId, "tasks", taskDoc.id);
+                await updateDoc(taskRef, {
+                    completed: checkedState,
+                    last_updated: serverTimestamp()
+                });
+            });
+
             container.appendChild(newcard);
         });
+
     } catch (error) {
         console.error("Error getting documents: ", error);
     }
 }
 
 async function init(userId) {
-    await seedTasks(userId);
     await displayCardsDynamically(userId);
 }
