@@ -4,15 +4,7 @@ import '../styles/style.css';
 
 import { auth, db } from './firebaseConfig.js';
 
-import { onAuthStateChanged } from 'firebase/auth';
-
-import {
-    collection,
-    getDocs,
-    query,
-    where,
-    limit
-} from 'firebase/firestore';
+import { collection, getDocs, query, orderBy, limit } from 'firebase/firestore';
 
 
 // Display the current date
@@ -31,38 +23,29 @@ function displayCurrentDate() {
     }
 }
 
+
 // Display the current week
-
 function displayCurrentWeek() {
-
     const dateElement = document.getElementById('current-week');
 
     if (dateElement) {
-
         const today = new Date();
 
-        // Get the first day of the week (Sunday).
         const startOfWeek = new Date(today);
-
         const day = today.getDay();
-
         const difference = -day;
 
         startOfWeek.setDate(today.getDate() + difference);
 
-        // Get the last day of the week (Saturday).
         const endOfWeek = new Date(startOfWeek);
-
         endOfWeek.setDate(startOfWeek.getDate() + 6);
 
-        // Format dates.
         const options = {
             month: 'long',
             day: 'numeric'
         };
 
         const startDate = startOfWeek.toLocaleDateString('en-CA', options);
-
         const endDate = endOfWeek.toLocaleDateString('en-CA', options);
 
         dateElement.textContent =
@@ -71,7 +54,30 @@ function displayCurrentWeek() {
 }
 
 
-// Display the user's three tasks
+// Display the live clock
+function displayClock() {
+    const clockElement = document.getElementById('current-time');
+
+    if (!clockElement) return;
+
+    function updateClock() {
+        const now = new Date();
+
+        clockElement.textContent = now.toLocaleTimeString('en-CA', {
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: true
+        });
+    }
+
+    updateClock();
+
+    setInterval(updateClock, 1000);
+}
+
+
+// Display the user's three most recently updated tasks
 async function displayUserTasks(userId) {
 
     const taskList = document.getElementById('task-list');
@@ -80,16 +86,17 @@ async function displayUserTasks(userId) {
 
     try {
 
-        const tasksRef = collection(db, 'tasks');
+        // Access the user's tasks subcollection
+        const userTasksRef = collection(db, 'users', userId, 'tasks');
 
+        // Retrieve the three most recently updated tasks
         const q = query(
-            tasksRef,
-            where('userId', '==', userId),
+            userTasksRef,
+            orderBy('last_updated', 'desc'),
             limit(3)
         );
 
         const querySnapshot = await getDocs(q);
-
 
         taskList.innerHTML = '';
 
@@ -98,31 +105,72 @@ async function displayUserTasks(userId) {
             return;
         }
 
+        querySnapshot.forEach((taskDoc) => {
 
-        querySnapshot.forEach((docSnap) => {
+            const task = taskDoc.data();
 
-            const task = docSnap.data();
-
+            // Create task card
             const taskCard = document.createElement('div');
 
-            taskCard.className = 'card mb-3 p-3';
+            taskCard.className = 'card shadow-sm mb-3 p-3';
 
+            // Task name
             const taskName = document.createElement('h5');
+            taskName.className = 'card-title';
             taskName.textContent = task.name || 'Untitled Task';
 
+            // Task details
             const taskDetails = document.createElement('p');
+            taskDetails.className = 'card-text';
             taskDetails.textContent = task.details || 'No additional details';
 
+            // Task date
             const taskDay = document.createElement('p');
-            taskDay.textContent = `Day: ${task.day || 'Not specified'}`;
+            taskDay.textContent = `Day: ${task.task_day || 'Not specified'}`;
 
+            // Task time
             const taskTime = document.createElement('p');
-            taskTime.textContent = `Time: ${task.task_time || 'Not specified'}`;
 
+            let formattedTime = 'Not specified';
+
+            if (task.task_time) {
+                let [hours, minutes] = task.task_time.split(':');
+
+                let h = parseInt(hours, 10);
+                const ampm = h >= 12 ? 'PM' : 'AM';
+
+                h = h % 12 || 12;
+
+                formattedTime = `${h}:${minutes} ${ampm}`;
+            }
+
+            taskTime.textContent = `Time: ${formattedTime}`;
+
+            // Task completion status
+            const taskStatus = document.createElement('span');
+
+            taskStatus.textContent = task.completed
+                ? 'Complete'
+                : 'Incomplete';
+
+            taskStatus.className = task.completed
+                ? 'badge bg-success text-white'
+                : 'badge bg-danger text-white';
+
+            // Edit task button
+            const editButton = document.createElement('a');
+
+            editButton.href = `eachTask.html?docID=${taskDoc.id}`;
+            editButton.className = 'btn btn-primary mt-3';
+            editButton.textContent = 'View / Edit Task';
+
+            // Add elements to card
             taskCard.appendChild(taskName);
             taskCard.appendChild(taskDetails);
             taskCard.appendChild(taskDay);
             taskCard.appendChild(taskTime);
+            taskCard.appendChild(taskStatus);
+            taskCard.appendChild(editButton);
 
             taskList.appendChild(taskCard);
 
@@ -136,11 +184,12 @@ async function displayUserTasks(userId) {
     }
 }
 
-// Display current date
-displayCurrentDate();
 
-// Display current date
+// Display current date, week, and clock
+displayCurrentDate();
 displayCurrentWeek();
+displayClock();
+
 
 // Check authentication and personalize dashboard
 auth.authStateReady().then(async () => {

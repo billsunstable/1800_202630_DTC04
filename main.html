@@ -8,14 +8,15 @@
 </head>
 
 <body>
-    <!-- Navigation Bar starts here-->
-    <site-navbar></site-navbar>
-    <!--Navigation Bar ends here-->
 
+    <!-- Navigation Bar starts here -->
+    <site-navbar></site-navbar>
+    <!-- Navigation Bar ends here -->
 
 
     <!-- Main Dashboard -->
     <div class="container-fluid bg-light text-dark p-5">
+
         <div class="container bg-light p-4">
 
             <!-- Personalized Greeting -->
@@ -27,38 +28,97 @@
 
             <p>Glad to see you on your journey to making your life easier!</p>
 
-            <!-- Current Date -->
-            <h3>Today's Date</h3>
-            <p id="current-date">Loading date...</p>
 
-            <hr>
+            <!-- Current Time -->
+            <div class="card shadow-sm p-4 mb-4 text-center">
 
-            <!-- Tasks -->
-            <h3>Your Upcoming Tasks</h3>
+                <h3>Current Time</h3>
 
-            <div id="task-list">
-                <p>Loading your tasks...</p>
+                <h1 id="current-time" class="display-3 fw-bold">
+                    Loading time...
+                </h1>
+
             </div>
 
+
+            <!-- Current Date -->
+            <div class="card shadow-sm p-4 mb-4">
+
+                <h3>Today's Date</h3>
+
+                <p id="current-date" class="fs-5">
+                    Loading date...
+                </p>
+
+            </div>
+
+
+            <!-- Current Week -->
+            <div class="card shadow-sm p-4 mb-4">
+
+                <h3>This Week</h3>
+
+                <p id="current-week" class="fs-5">
+                    Loading week...
+                </p>
+
+            </div>
+
+
             <hr>
+
+
+            <!-- User's Top Three Tasks -->
+            <!-- User's Top Three Most Recent Tasks -->
+            <h3>Your 3 Most Recent Tasks</h3>
+
+            <p>Here are your three most recently updated tasks!</p>
+
+            <div id="task-list" class="row">
+
+            <p>Loading your tasks...</p>
+
+            </div>
+
+
+            <hr>
+
 
             <!-- Navigation Buttons -->
             <div class="row">
-                <div class="col-md-6 mb-2">
-                    <a href="tasks.html" class="btn btn-primary btn-lg w-100 border-3 border-dark fw-semibold">
-                        Tasks Page
-                    </a>
-                </div>
 
                 <div class="col-md-6 mb-2">
-                    <a href="calendar.html" class="btn btn-secondary btn-lg w-100 border-3 border-dark fw-semibold">
-                        Calendar Page
+
+                    <a href="tasks.html" class="btn btn-primary btn-lg w-100 border-3 border-dark fw-semibold">
+
+                        Tasks Page
+
                     </a>
+
                 </div>
+
+
+                <div class="col-md-6 mb-2">
+
+                    <a href="calendar.html" class="btn btn-secondary btn-lg w-100 border-3 border-dark fw-semibold">
+
+                        Calendar Page
+
+                    </a>
+
+                </div>
+
             </div>
 
         </div>
+
     </div>
 
+
     <script type="module" src="/src/main.js"></script>
+
     <script type="module" src="/src/components/site-navbar.js"></script>
+
+</body>
+
+</html>
