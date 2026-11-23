@@ -10,15 +10,56 @@
         crossorigin="anonymous"></script>
 
     <style>
-        /* Custom style for uniform height and smooth scroll on busy days */
-        .day-card {
-            min-height: 250px;
-            height: 100%;
+        /* Highlight today's calendar card */
+        .today-card {
+            border: 2px solid #0d6efd !important;
         }
 
-        .event-list {
-            max-height: 180px;
-            overflow-y: auto;
+        /* Highlight today's header */
+        .today-header {
+            background-color: #0d6efd !important;
+        }
+
+        /* Task indicator */
+        .task-indicator {
+            font-size: 0.7rem;
+            width: fit-content;
+        }
+
+        /* Make task cards feel clickable */
+        .task-card {
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .task-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12);
+        }
+
+        /* Calendar navigation buttons */
+        .calendar-navigation .btn {
+            border-radius: 8px;
+            padding: 10px 18px;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+        }
+
+        /* Add hover effect */
+        .calendar-navigation .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Make the Today button stand out */
+        .calendar-navigation .btn-primary {
+            background-color: #0d6efd;
+            border-color: #0d6efd;
+        }
+
+        /* Dark navy Previous and Next buttons */
+        .calendar-navigation .btn-dark {
+            background-color: #212b45;
+            border-color: #212b45;
         }
     </style>
 </head>
@@ -44,21 +85,22 @@
             </div>
 
             <!-- Week navigation buttons -->
-            <div class="btn-group" role="group">
+            <div class="btn-group calendar-navigation shadow-sm" role="group">
 
-                <button type="button" class="btn btn-outline-secondary btn-sm">
-                    Previous
+                <button type="button" id="previous-week" class="btn btn-dark fw-bold px-3">
+                    <span class="me-1">←</span> Previous
                 </button>
 
-                <button type="button" class="btn btn-outline-primary btn-sm active">
+                <button type="button" id="this-week" class="btn btn-primary fw-bold px-3">
                     This Week
                 </button>
 
-                <button type="button" class="btn btn-outline-secondary btn-sm">
-                    Next
+                <button type="button" id="next-week" class="btn btn-dark fw-bold px-3">
+                    Next <span class="ms-1">→</span>
                 </button>
 
             </div>
+
 
         </div>
 
@@ -80,7 +122,11 @@
 
                     <h5 class="calendar-title mb-1"></h5>
 
-                    <p class="calendar-day mb-0"></p>
+                    <p class="calendar-day mb-1"></p>
+
+                    <span class="task-indicator badge bg-info text-dark d-none">
+                        0 tasks
+                    </span>
 
                 </div>
 
@@ -97,6 +143,57 @@
         </div>
 
     </template>
+
+    <!-- Task Details Modal -->
+    <div class="modal fade" id="taskDetailsModal" tabindex="-1" aria-labelledby="taskDetailsTitle" aria-hidden="true">
+
+        <div class="modal-dialog modal-dialog-centered">
+
+            <div class="modal-content">
+
+                <div class="modal-header bg-dark text-white">
+
+                    <h5 class="modal-title" id="taskDetailsTitle">
+                        Task Details
+                    </h5>
+
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close">
+                    </button>
+
+                </div>
+
+                <div class="modal-body">
+
+                    <h4 id="modal-task-name" class="fw-bold mb-3"></h4>
+
+                    <p class="mb-2">
+                        <strong>Date:</strong>
+                        <span id="modal-task-date"></span>
+                    </p>
+
+                    <p class="mb-2">
+                        <strong>Time:</strong>
+                        <span id="modal-task-time"></span>
+                    </p>
+
+                    <hr>
+
+                    <h6 class="fw-bold">Description</h6>
+
+                    <p id="modal-task-details" class="text-muted mb-0">
+                    </p>
+
+                </div>
+
+                <div class="modal-footer">
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
 
     <script type="module" src="./src/main.js"></script>
     <script type="module" src="./src/calendar.js"></script>
